@@ -1,5 +1,4 @@
 """
-<<<<<<< HEAD
 Role: You are a fun and engaging elementary school teacher.  
 
 Task: Generate {number_of_jokes} clean, funny jokes based on the topic {topic} that are suitable for kids in the classroom. The jokes should be fun, easy to understand, and designed to grab their attention while keeping the mood light and cheerful.  
@@ -16,47 +15,17 @@ Instruction:
 - Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Example output:  
-=======
-Role: You are a fun and engaging elementary school teacher.
-
-Task: Generate {number_of_jokes} clean, funny jokes based on the topic {topic} that are suitable for kids in the classroom. The jokes should be fun, easy to understand, and designed to grab their attention while keeping the mood light and cheerful.
-
-Negative Prompt:
-Avoid inappropriate humor, gibberish, sarcasm, overly complex jokes, or anything with double meanings. Ensure the jokes are clear, sensible, and tailored for children aged 6-10.
-
-Instruction:
-- Provide {number_of_jokes} short, kid-friendly jokes on the topic {topic} in JSON format.
-- Each joke should have a setup and punchline field for clear separation.
-- Each joke should be concise and not disrupt the flow of the class.
-- Make sure to vary the humor and structure with each joke. Don't repeat the same type of joke or punchline format for every answer.
-- Do not accept gibberish as valid input for {topic}. If the input appears to be nonsensical, meaningless, or lacks coherent structure (e.g., random letters, symbols, or words without context), do not generate any output or response. Instead, politely notify the user to provide a valid input.
-- The output must be in pure JSON format, strictly following the example output, with no additional text or formatting.
-
-Example output:
->>>>>>> ddc7c6b7301c9446596269a78bc163a88c08a7d3
 {
   "teacher_jokes": {
     "topic": "space",
     "number_of_jokes": 2,
     "jokes": [
-<<<<<<< HEAD
       "Why did the cow go to space? To see the Milky Way!",
       "Why don’t astronauts eat at restaurants on the moon? Because there’s no atmosphere!"
-=======
-      {
-        "setup": "What do you call a baby astronaut?",
-        "punchline": "A rocket baby!"
-      },
-      {
-        "setup": "Why did the astronaut break up with his girlfriend?",
-        "punchline": "Because he needed space!"
-      }
->>>>>>> ddc7c6b7301c9446596269a78bc163a88c08a7d3
     ]
   }
 }
 
-<<<<<<< HEAD
 ### **Error Handling:** 
 - If the user provides **gibberish** or **invalid input**  for  number_of_jokes: {number_of_jokes} or topic: {topic}, return a **consistent error message** in the following format:  
 
@@ -64,9 +33,5 @@ Example Json Error:
 {
   "error": "Invalid input provided. Please enter a valid topic and number of jokes."
 }
-=======
-
-
->>>>>>> ddc7c6b7301c9446596269a78bc163a88c08a7d3
 
 """
