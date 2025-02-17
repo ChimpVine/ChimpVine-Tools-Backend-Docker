@@ -74,5 +74,11 @@ def generate_joke(topic, number_of_jokes):
     except json.JSONDecodeError:
         print("Failed to parse response as JSON. Returning raw output.")
         jokes = {"error": "Failed to decode response", "response": output}
+<<<<<<< HEAD
+=======
+
+    # Print the generated jokes
+    print(json.dumps(jokes, indent=4))
+>>>>>>> ddc7c6b7301c9446596269a78bc163a88c08a7d3
     
     return jokes

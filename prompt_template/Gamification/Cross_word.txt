@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 """
 Define the word "{word}" in a simple, child-friendly manner.
+=======
+"""
+Define the word "{word}" in a simple, child-friendly manner.
+>>>>>>> ddc7c6b7301c9446596269a78bc163a88c08a7d3
 """
