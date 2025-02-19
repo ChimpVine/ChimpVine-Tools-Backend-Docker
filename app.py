@@ -897,8 +897,6 @@ def slide_two_API():
     response = slide_two.second_slide(response_first_slide)
     return response
 
-
-
 @app.route('/text_summarizer', methods=['POST'])
 def text_summarizer_API():
     # Extract headers
@@ -921,10 +919,17 @@ def text_summarizer_API():
     if not all([text, summary_format]):
         return jsonify({'error': 'Missing required fields'}), 400
 
-    # Check word count limit
+    # Check for special characters (excluding basic punctuation)
+    if re.search(r'[^A-Za-z0-9\s.,!?\'"-]', text):
+        return jsonify({'error': 'Invalid characters detected. Please remove special symbols like #, $.'}), 400
+
+    # Check word count limit and ensure there is at least one word  
     word_count = len(text.split())
-    if word_count > 1000:
+    if word_count == 0:
+        return jsonify({'error': 'Text cannot be empty. Please enter some words.'}), 400
+    elif word_count > 1000:
         return jsonify({'error': 'Exceeded word limit. Please enter 1000 words only.'}), 400
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Text Summarizer")
     if not tool:
@@ -1320,18 +1325,23 @@ def generate_bingo_cards():
     if not site_url:
         return jsonify({'error': "Missing 'X-Site-Url' header"}), 400
 
-    topic = data.get("topic", "").strip()
-    num_students = data.get("num_students", 1)
+    topic = data.get("topic")
+    num_students = data.get("num_students")
 
     print(topic,num_students)
     # Validate the topic
     if not topic:
         return jsonify({"error": "Topic is required"}), 400
+    
+    # Validate 'theme' field
+    valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
 
     # Validate the number of students
     try:
         num_students = int(num_students)
-        if num_students < 1:
+        if num_students < 1 and num_students < 20:
             return jsonify({"error": "Number of students must be at least 1"}), 400
     except ValueError:
         return jsonify({"error": "Invalid number of students"}), 400
@@ -1450,63 +1460,7 @@ def mystery_game_API():
         except Exception as e:
             print(f"Error processing request: {e}")
             return jsonify({'error': str(e)}), 500
-
-
-# API endpoint to receive data from form and update the Google Sheet
-@app.route("/google_sheet", methods=['POST'])
-def google_sheet():
-    # Retrieve data from form or JSON request
-    data = request.get_json() or request.form
-    full_name = data.get('full_name')
-    email = data.get('email')
-    description = data.get('description')
-    captcha_response = data.get('recaptchaToken')
-    print(captcha_response)
-    print(full_name, email,  description)
-
-    
-    # Get sheet_id and recaptcha secret from environment variables
-    sheet_id = os.getenv('SHEET_ID')
-    recaptcha_secret = os.getenv('RECAPTCHA_SECRET_KEY2')
-
-    print(recaptcha_secret)
-
-    # Check for required parameters
-    if not all([full_name, email, description, sheet_id, captcha_response]):
-        return jsonify({"error": "Please provide all required fields."}), 400
-
-    # # Verify CAPTCHA with Google's reCAPTCHA API
-    # captcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify'
-    # captcha_verify_payload = {'secret': recaptcha_secret, 'response': captcha_response}
-    # captcha_verify_response = requests.post(captcha_verify_url, data=captcha_verify_payload)
-    # captcha_verify_result = captcha_verify_response.json()
-    # print(captcha_verify_result)
-
-    # if not captcha_verify_result.get('success'):
-    #     return jsonify({"error": "Invalid CAPTCHA. Please try again."}), 400
-    # Verify CAPTCHA with Google's reCAPTCHA API
-    captcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify'
-    captcha_verify_payload = {'secret': recaptcha_secret, 'response': captcha_response}
-    captcha_verify_response = requests.post(captcha_verify_url, data=captcha_verify_payload)
-
-    # Log the verification payload and response
-    print(f"CAPTCHA Verification Payload: {captcha_verify_payload}")
-    print(f"CAPTCHA Verification Response: {captcha_verify_response.text}")
-
-    captcha_verify_result = captcha_verify_response.json()
-
-    if not captcha_verify_result.get('success'):
-        error_codes = captcha_verify_result.get('error-codes', [])
-        print(f"CAPTCHA failed with error codes: {error_codes}")
-        return jsonify({"error": "Invalid CAPTCHA. Please try again.", "error_codes": error_codes}), 400
-
-        # Try to update the Google Sheet and return the result
-    try:
-        result = update_google_sheet(full_name, email, description, sheet_id)
-        return result
-    except Exception as e:
-        print(f"Error processing request: {e}")
-        return jsonify({"error": str(e)}), 500
+        
 
 @app.route('/generate-vocab-list', methods=['POST'])
 def generate_vocab_list():
@@ -1534,6 +1488,25 @@ def generate_vocab_list():
     # Validating required fields
     if not all([grade_level, subject, topic, num_words, difficulty_level]):
         return jsonify({"error": "Missing required fields"}), 400
+    
+    # Validate 'theme' field
+    valid, error = validate_string(subject, "Subject", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'theme' field
+    valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+
+    # Convert and Validate 'number_of_words'
+    try:
+        num_words = int(num_words) 
+        if num_words < 1 or num_words > 50:
+            raise ValueError
+    except ValueError:
+        return jsonify({'error': "'Number of words' must be an integer between 1 and 50."}), 400
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Vocab List Generator")
     if not tool:
@@ -1591,6 +1564,20 @@ def generate_tongue_twisters():
     # Validate required fields
     if not topic or not number_of_twisters:
         return jsonify({"error": "Please provide both 'topic' and 'number_of_twisters'"}), 400
+    
+    # Validate 'theme' field
+    valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+
+    # Convert and Validate 'number_of_words'
+    try:
+        number_of_twisters = int(number_of_twisters) 
+        if number_of_twisters < 1 or number_of_twisters > 50:
+            raise ValueError
+    except ValueError:
+        return jsonify({'error': "'Number of twisters' must be an integer between 1 and 50."}), 400
+        
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Tongue Twister")
     if not tool:
@@ -1753,8 +1740,6 @@ def generate_data():
         return jsonify(data_response),200
     
 
-
-
 # New import for YT
 from utils.Summarizer.youtube import YT_summary_generation
 
@@ -1844,6 +1829,50 @@ def use_token(auth_token, site_url,Tool_ID,Token):
     
     return api_request(auth_token, site_url, "use-token",Tool_ID,Token)
 
+
+@app.route("/google_sheet1", methods=["POST"])
+def submit_form():
+    try:
+        data = request.json
+        full_name = data.get("full_name", "").strip()
+        email = data.get("email", "").strip()
+        description = data.get("description", "").strip()
+        recaptcha_token = data.get("recaptchaToken")
+
+        # Validate form fields
+        if not full_name or not email or not description:
+            return jsonify({"error": "All fields are required"}), 400
+
+        # Verify reCAPTCHA
+        if not recaptcha_token:
+            return jsonify({"error": "reCAPTCHA verification failed"}), 400
+
+        recaptcha_response = requests.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data={
+                "secret": os.getenv("RECAPTCHA_SECRET_KEY"),
+                "response": recaptcha_token,
+            },
+        ).json()
+
+        if not recaptcha_response.get("success"):
+            return jsonify({"error": "Invalid reCAPTCHA token"}), 400
+        
+        sheet_id = os.getenv('SHEET_ID')
+        update_google_sheet(full_name, email, description, sheet_id)
+
+        # Save data (extend this to store in Google Sheets or a database)
+        print(f"Received: {full_name}, {email}, {description}")
+        
+        return jsonify({"message": "Form submitted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+    
+# if __name__ == '__main__':
+#     app.run(debug=True)
     
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8080)
