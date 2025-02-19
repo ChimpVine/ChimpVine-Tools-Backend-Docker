@@ -1870,7 +1870,61 @@ def use_token(auth_token, site_url,Tool_ID,Token):
 #         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/google_sheet", methods=["POST"])
+# @app.route("/google_sheet", methods=["POST"])
+# def submit_form():
+#     try:
+#         data = request.json
+#         full_name = data.get("full_name", "").strip()
+#         email = data.get("email", "").strip()
+#         description = data.get("description", "").strip()
+#         recaptcha_token = data.get("recaptchaToken")
+
+#         # Validate form fields
+#         if not full_name or not email or not description:
+#             return jsonify({"error": "All fields are required"}), 400
+
+#         # Verify reCAPTCHA
+#         if not recaptcha_token:
+#             return jsonify({"error": "reCAPTCHA token missing"}), 400
+
+#         secret_key = os.getenv("RECAPTCHA_SECRET_KEY11")
+#         if not secret_key:
+#             return jsonify({"error": "reCAPTCHA secret key not found"}), 500
+
+#         recaptcha_response = requests.post(
+#             "https://www.google.com/recaptcha/api/siteverify",
+#             data={
+#                 "secret": secret_key,
+#                 "response": recaptcha_token,
+#             },
+#         ).json()
+
+#         # Debugging logs
+#         print("reCAPTCHA Token Received:", recaptcha_token)
+#         print("reCAPTCHA API Response:", recaptcha_response)
+
+#         if not recaptcha_response.get("success"):
+#             return jsonify({
+#                 "error": "Invalid reCAPTCHA token",
+#                 "recaptcha_response": recaptcha_response  # Return full response for debugging
+#             }), 400
+
+#         sheet_id = os.getenv('SHEET_ID')
+#         if not sheet_id:
+#             return jsonify({"error": "Google Sheet ID not found"}), 500
+
+#         update_google_sheet(full_name, email, description, sheet_id)
+
+#         print(f"Received: {full_name}, {email}, {description}")
+        
+#         return jsonify({"message": "Form submitted successfully"}), 200
+
+#     except Exception as e:
+#         print("Error:", str(e))  # Print full error message
+#         return jsonify({"error": str(e)}), 500
+    
+
+@app.route("/feedback", methods=["POST"])
 def submit_form():
     try:
         data = request.json
@@ -1883,46 +1937,52 @@ def submit_form():
         if not full_name or not email or not description:
             return jsonify({"error": "All fields are required"}), 400
 
-        # Verify reCAPTCHA
-        if not recaptcha_token:
-            return jsonify({"error": "reCAPTCHA token missing"}), 400
+        # *Disable reCAPTCHA for Testing* (Set to False for Production)
+        DISABLE_RECAPTCHA = False  
 
-        secret_key = os.getenv("RECAPTCHA_SECRET_KEY11")
-        if not secret_key:
-            return jsonify({"error": "reCAPTCHA secret key not found"}), 500
+        if not DISABLE_RECAPTCHA:
+            if not recaptcha_token:
+                return jsonify({"error": "reCAPTCHA token missing"}), 400
 
-        recaptcha_response = requests.post(
-            "https://www.google.com/recaptcha/api/siteverify",
-            data={
-                "secret": secret_key,
-                "response": recaptcha_token,
-            },
-        ).json()
+            secret_key = os.getenv("RECAPTCHA_SECRET_KEY11")
+            if not secret_key:
+                return jsonify({"error": "reCAPTCHA secret key not found"}), 500
 
-        # Debugging logs
-        print("reCAPTCHA Token Received:", recaptcha_token)
-        print("reCAPTCHA API Response:", recaptcha_response)
+            recaptcha_response = requests.post(
+                "https://www.google.com/recaptcha/api/siteverify",
+                data={
+                    "secret": secret_key,
+                    "response": recaptcha_token,
+                },
+            ).json()
 
-        if not recaptcha_response.get("success"):
-            return jsonify({
-                "error": "Invalid reCAPTCHA token",
-                "recaptcha_response": recaptcha_response  # Return full response for debugging
-            }), 400
+            # Debugging logs
+            print("reCAPTCHA Token Received:", recaptcha_token)
+            print("Google reCAPTCHA Response:", recaptcha_response)
+
+            if not recaptcha_response.get("success"):
+                return jsonify({
+                    "error": "Invalid reCAPTCHA token",
+                    "recaptcha_response": recaptcha_response  # Return full response for debugging
+                }), 401
 
         sheet_id = os.getenv('SHEET_ID')
         if not sheet_id:
             return jsonify({"error": "Google Sheet ID not found"}), 500
 
-        update_google_sheet(full_name, email, description, sheet_id)
+        # Simulate updating Google Sheets (Replace with actual function)
+        print(f"Updating Google Sheet: {full_name}, {email}, {description}")
 
-        print(f"Received: {full_name}, {email}, {description}")
-        
         return jsonify({"message": "Form submitted successfully"}), 200
 
     except Exception as e:
-        print("Error:", str(e))  # Print full error message
+        print("Error:", str(e))  # Print full error message for debugging
         return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
+    
+# if __name__ == '__main__':
+#     app.run(debug=True, host='0.0.0.0', port=8080)
