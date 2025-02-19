@@ -1830,7 +1830,7 @@ def use_token(auth_token, site_url,Tool_ID,Token):
     return api_request(auth_token, site_url, "use-token",Tool_ID,Token)
 
 
-@app.route("/google_sheet1", methods=["POST"])
+@app.route("/google_sheet", methods=["POST"])
 def submit_form():
     try:
         data = request.json
