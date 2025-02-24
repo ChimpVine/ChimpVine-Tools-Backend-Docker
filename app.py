@@ -1978,6 +1978,63 @@ def submit_form():
     except Exception as e:
         print("Error:", str(e))  # Print full error message for debugging
         return jsonify({"error": str(e)}), 500
+    
+
+# API endpoint to receive data from form and update the Google Sheet
+@app.route("/google_sheet_v3", methods=['POST'])
+def google_sheet():
+    # Retrieve data from form or JSON request
+    data = request.get_json() or request.form
+    full_name = data.get('full_name')
+    email = data.get('email')
+    description = data.get('description')
+    captcha_response = data.get('recaptchaToken')
+    print(captcha_response)
+    print(full_name, email,  description)
+
+    
+    # Get sheet_id and recaptcha secret from environment variables
+    sheet_id = os.getenv('SHEET_ID')
+    recaptcha_secret = os.getenv('RECAPTCHA_SECRET_KEY_V3')
+
+    print(recaptcha_secret)
+
+    # Check for required parameters
+    if not all([full_name, email, description, sheet_id, captcha_response]):
+        return jsonify({"error": "Please provide all required fields."}), 400
+
+    # # Verify CAPTCHA with Google's reCAPTCHA API
+    # captcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify'
+    # captcha_verify_payload = {'secret': recaptcha_secret, 'response': captcha_response}
+    # captcha_verify_response = requests.post(captcha_verify_url, data=captcha_verify_payload)
+    # captcha_verify_result = captcha_verify_response.json()
+    # print(captcha_verify_result)
+
+    # if not captcha_verify_result.get('success'):
+    #     return jsonify({"error": "Invalid CAPTCHA. Please try again."}), 400
+    # Verify CAPTCHA with Google's reCAPTCHA API
+    captcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify'
+    captcha_verify_payload = {'secret': recaptcha_secret, 'response': captcha_response}
+    captcha_verify_response = requests.post(captcha_verify_url, data=captcha_verify_payload)
+
+    # Log the verification payload and response
+    print(f"CAPTCHA Verification Payload: {captcha_verify_payload}")
+    print(f"CAPTCHA Verification Response: {captcha_verify_response.text}")
+
+    captcha_verify_result = captcha_verify_response.json()
+
+    if not captcha_verify_result.get('success'):
+        error_codes = captcha_verify_result.get('error-codes', [])
+        print(f"CAPTCHA failed with error codes: {error_codes}")
+        return jsonify({"error": "Invalid CAPTCHA. Please try again.", "error_codes": error_codes}), 400
+
+        # Try to update the Google Sheet and return the result
+    try:
+        result = update_google_sheet(full_name, email, description, sheet_id)
+        return result
+    except Exception as e:
+        print(f"Error processing request: {e}")
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
