@@ -8,14 +8,15 @@ Additional requirements: {additional_requirements}
 Negative Prompt: Avoid generic rubrics; ensure that each criterion is specific to the provided grade level and assignment description.
 
 Instructions:
-
-Use the provided grade level, assignment description, point scale, and additional requirements to generate a comprehensive rubric.
-Ensure that each criterion clearly distinguishes between different levels of achievement based on the point scale.
-Format the rubric in a table with columns for criteria and the specified number of levels of achievement.
-Provide specific descriptors for each level of achievement.
+- Use the provided grade level, assignment description, point scale, and additional requirements to generate a comprehensive rubric.
+= Ensure that each criterion clearly distinguishes between different levels of achievement based on the point scale.
+- Format the rubric in a table with columns for criteria and the specified number of levels of achievement.
+- Provide specific descriptors for each level of achievement.
 
 Negative Prompt: 
-Avoid generic rubrics; ensure that each criterion is specific to the provided grade level and assignment description.
+- Avoid generic rubrics; ensure that each criterion is specific to the provided grade level and assignment description.
+- Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+- Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Use the following format:
     {
@@ -44,4 +45,11 @@ Use the following format:
 3. Ensure each level of achievement under each criterion is detailed and specific to the grade level and assignment description.
 4. Fill in the placeholders with specific content based on the provided input parameters.
 
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  grade level: {grade_level} or assignment description: {assignment_description}, or point scale: {point_scale}, or additional requirements: {additional_requirements} return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid grade level, assignment description, point scale, and additional requirements."
+}
 """

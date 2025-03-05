@@ -84,8 +84,6 @@ from utils.Assessment.SAT.SAT_maths import generate_math_quiz
 # For Google Sheets update
 from utils.Request_sheet import update_google_sheet
 
-
-
 # For Wordpress Site 
 import http.client
 import json
@@ -147,7 +145,6 @@ def extract_text_from_pdf(pdf_path):
 
     return text
 
-
 def validate_string(input_value, field_name, min_length=1, max_length=None, allow_special_chars=False):
     if not isinstance(input_value, str):
         return False, f"{field_name} must be a string."
@@ -197,6 +194,15 @@ def api_generate_lesson_plan():
     duration = data.get('duration')
     subject = data.get('subject')
     print(file, lesson, grade, duration, subject)
+    
+    # Validate required fields and file
+    if not all([file, lesson, grade, duration, subject]):
+        return jsonify({"error": "Missing required fields or file"}), 400
+    
+    # Validate 'Topic' field
+    valid, error = validate_string(lesson, "Lesson (File Description)", min_length=3, max_length=500)
+    if not valid:
+        return jsonify({"error": error}), 400
 
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Lesson Planner")
@@ -206,10 +212,6 @@ def api_generate_lesson_plan():
     Tool_ID = tool.get('Tool_ID')
     Token = tool.get('Token')
     print(f"Tool ID: {Tool_ID}, Token Index: {Token}")
-
-    # Validate required fields and file
-    if not all([file, lesson, grade, duration, subject]):
-        return jsonify({"error": "Missing required fields or file"}), 400
 
     # Verify tokens before proceeding
     try:
@@ -275,6 +277,16 @@ def api_generate_workbook():
     lesson = data.get('command')
     grade = data.get('grade')
     subject = data.get('subject')
+    
+    # Validate required fields and file
+    if not all([file, lesson, grade, subject]):
+        return jsonify({"error": "Missing required fields or file"}), 400
+    
+    # Validate 'Lesson (Topic)' field
+    valid, error = validate_string(lesson, "Lesson (Topic)", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Workbook")
     if not tool:
@@ -284,9 +296,7 @@ def api_generate_workbook():
     Token = tool.get('Token')
     print(f"Tool ID: {Tool_ID}, Token Index: {Token}")
 
-    # Validate required fields and file
-    if not all([file, lesson, grade, subject]):
-        return jsonify({"error": "Missing required fields or file"}), 400
+
 
     # Verify tokens before proceeding
     try:
@@ -361,6 +371,25 @@ def generate_quiz():
     # Validate required fields
     if not all([topic, language, subject, number, difficulty]):
         return jsonify({"error": "Missing required fields"}), 400
+    
+    # Validate 'Topic' field
+    valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'Subject' field
+    valid, error = validate_string(topic, "Subject", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Convert and Validate 'number of questions'
+    try:
+        number = int(number)  # Convert to integer
+        if number < 1 or number > 50:
+            raise ValueError
+    except ValueError:
+        return jsonify({'error': "'Number of questions' must be an integer between 1 and 50."}), 400
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Quiz")
     if not tool:
@@ -519,6 +548,7 @@ def generate_rubric():
     # Access form or JSON fields
     grade_level = data.get('grade_level')
     assignment_description = data.get('assignment_description')
+    
     # Use getlist() if it's form data; otherwise, access directly for JSON
     if isinstance(data, dict):  # If it's a dictionary (JSON)
         point_scale = data.get('point_scale')  # Get point_scale from JSON
@@ -530,7 +560,12 @@ def generate_rubric():
     # Check if all required fields are present
     if not all([grade_level, assignment_description, point_scale, additional_requirements]):
         return jsonify({"error": "Missing required fields"}), 400
-
+    
+    # Validate 'Assignment Description' field
+    valid, error = validate_string(assignment_description, "Assignment Description", min_length=3, max_length=500)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
     try:
         # Call your rubric generation function
         result = rubric_generation(grade_level, assignment_description, point_scale, additional_requirements)
@@ -557,6 +592,25 @@ def Word_puzzle_API():
     topic = data.get('topic')
     numberofword = data.get('numberofword')
     difficulty_level = data.get('difficulty_level')
+    
+    # Validate required fields
+    if not all([topic, numberofword, difficulty_level]):
+        return jsonify({"error": "Missing required fields"}), 400
+    
+    # Validate 'Topic' field
+    valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Convert and Validate 'numberofword'
+    try:
+        numberofword = int(numberofword)
+        if numberofword < 1 or numberofword > 50:
+            raise ValueError
+    except ValueError:
+        return jsonify({'error': "'Number of word' must be an integer between 1 and 50."}), 400
+
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Word Puzzle")
     if not tool:
@@ -565,9 +619,7 @@ def Word_puzzle_API():
     Tool_ID = tool.get('Tool_ID')
     Token = tool.get('Token')
     print(f"Tool ID: {Tool_ID}, Token Index: {Token}")
-    # Validate required fields
-    if not all([topic, numberofword, difficulty_level]):
-        return jsonify({"error": "Missing required fields"}), 400
+
 
     # Verify tokens before proceeding
     try:
@@ -625,6 +677,31 @@ def Group_work_API():
     # Validate required fields
     if not all([subject, grade, topic, learning_objective, group_size]):
         return jsonify({"error": "Missing required fields"}), 400
+    
+    # Validate 'Subject' field
+    valid, error = validate_string(subject, "Subject", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'Topic' field
+    valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'Learning Objective' field
+    valid, error = validate_string(learning_objective, "Learning Objective", min_length=3, max_length=500)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Convert and Validate 'group_size'
+    try:
+        group_size = int(group_size)  # Convert to integer
+        if group_size < 1 or group_size > 50:
+            raise ValueError
+    except ValueError:
+        return jsonify({'error': "'Group size' must be an integer between 1 and 50."}), 400
+    
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Group Work")
     if not tool:
@@ -664,6 +741,7 @@ def Group_work_API():
     except Exception as e:
         print(f"Error processing request: {e}")
         return jsonify({"error": str(e)}), 500
+    
 @app.route("/Vadic_math", methods=['POST'])
 def Vadic_math_API():
     data = request.form or request.json
@@ -703,6 +781,35 @@ def Social_stories_API():
     # Validate required fields
     if not all([child_name, child_age, scenario, behavior_challenge, ideal_behavior]):
         return jsonify({"error": "Missing required fields"}), 400
+    
+    # Validate 'Name' field
+    valid, error = validate_string(child_name, "Child name", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Convert and Validate 'number_of_jokes'
+    try:
+        child_age = int(child_age)  # Convert to integer
+        if child_age < 1 or child_age > 18:
+            raise ValueError
+    except ValueError:
+        return jsonify({'error': "'Child age' must be an integer between 1 and 18."}), 400
+    
+    # Validate 'Scenario' field
+    valid, error = validate_string(scenario, "Scenario", min_length=3, max_length=500)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'Behavior challenge' field
+    valid, error = validate_string(behavior_challenge, "Behavior challenge", min_length=3, max_length=500)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'Ideal behavior' field
+    valid, error = validate_string(ideal_behavior, "Ideal behavior", min_length=3, max_length=500)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Social Story")
     if not tool:
@@ -1065,6 +1172,17 @@ def generate_sel_plan_API():
     sel_topic = data.get('sel_topic')
     learning_objectives = data.get('learning_objectives')
     duration = data.get('duration')
+    
+    # Validate 'topic' field
+    valid, error = validate_string(sel_topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'topic' field
+    valid, error = validate_string(learning_objectives, "Learning Objectives", min_length=3, max_length=500)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "SEL Generator")
     if not tool:
@@ -1752,11 +1870,9 @@ def get_response():
  
         prompt = YT_summary_generation(topic)
             
-            
         response_text = prompt
         print("This is the output:", response_text)
         
-
         # Render the result template with the response
         return response_text
     

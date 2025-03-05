@@ -10,24 +10,25 @@ Subject: {subject}
 Topic: {topic}
 Number of Words: {num_words}
 Difficulty Level: {difficulty_level}
+
 Requirements:
+* Vocabulary List:
+  - Create a list of {num_words} vocabulary words relevant to the specified grade level, subject, and topic.
+  - Provide clear, age-appropriate definitions for each word.
+  - Ensure that the vocabulary and definitions align with the specified difficulty level.
 
-Vocabulary List:
+* Sentence Creation Table:
+  - For each word, include a sentence creation exercise.
+  - Provide one example sentence for the first word.
+  - Leave the remaining sentences blank for the user to fill in.
 
-Create a list of {num_words} vocabulary words relevant to the specified grade level, subject, and topic.
-Provide clear, age-appropriate definitions for each word.
-Ensure that the vocabulary and definitions align with the specified difficulty level.
-Sentence Creation Table:
-
-For each word, include a sentence creation exercise.
-Provide one example sentence for the first word.
-Leave the remaining sentences blank for the user to fill in.
-
-Negative Prompts:
-Avoid words and definitions unrelated to the subject and topic.
-Do not use advanced vocabulary that exceeds the specified grade level.
-Ensure all fields are filled with relevant content.
-Do not generate example_sentence field for more than one word.
+* Negative Prompts:
+  - Avoid words and definitions unrelated to the subject and topic.
+  - Do not use advanced vocabulary that exceeds the specified grade level.
+  - Ensure all fields are filled with relevant content.
+  - Do not generate example_sentence field for more than one word.
+  - Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+  - Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Example:
 {
@@ -64,4 +65,13 @@ Adjust the difficulty level according to the specified difficulty level.
 Replace {grade_level}, {subject}, {topic}, {num_words}, and {difficulty_level} with the specific requirements provided.
 Ensure all vocabulary and sentences are appropriate for the specified grade level.
 Generate example_sentence field only for the first word generated.
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  grade level: {grade_level} or subject: {subject}, or topic: {topic}, or num_words: {num_words}, or difficulty_level: {difficulty_level} return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid grade level, subject, topic, number of words and difficulty level."
+}
+
 """

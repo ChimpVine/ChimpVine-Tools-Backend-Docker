@@ -7,10 +7,11 @@ Read the provided text and generate a clear, concise summary in the chosen forma
 Text: {text}
 Summary Format: {summary_format}
 
-
 Negative Prompt:
 Do not include irrelevant details, redundant information, or personal interpretations.
 Avoid using complex jargon, overly long sentences, or copying large portions of the text verbatim.
+- Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+- Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Example Outputs:
 
@@ -31,4 +32,13 @@ Paragraph Format:
 
 Instructions:
 Carefully read the text and create a summary that accurately reflects its core ideas and primary arguments. Keep the summary brief (50-100 words) and objective, without adding any personal bias.
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for Text: {text}, Summary Format: {summary_format}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid text, and summary format."
+}
+
 """

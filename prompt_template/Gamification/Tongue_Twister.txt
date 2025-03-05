@@ -2,19 +2,19 @@
 Generate {number_of_twisters} tongue twisters for elementary school teachers to entertain their students. The tongue twisters should be based on the following user inputs:
 
 Number of Tongue Twisters: {number_of_twisters}
-Topic (optional): {topic}
-
-Negative Prompt:
-
-Do not generate tongue twisters that are overly complex or inappropriate for an elementary school audience.
-Avoid using tongue twisters that do not align with the provided topic if a topic is specified.
+Topic: {topic}
 
 Instructions:
+- Replace {number_of_twisters} with the specific number of tongue twisters requested by the user.
+- Replace {topic} with the specific topic or theme provided by the user, if any.
+- Ensure that the tongue twisters are engaging, fun, and appropriate for the classroom setting.
+- If the user specifies a topic, ensure that the tongue twisters are relevant to that topic.
 
-Replace {number_of_twisters} with the specific number of tongue twisters requested by the user.
-Replace {topic} with the specific topic or theme provided by the user, if any.
-Ensure that the tongue twisters are engaging, fun, and appropriate for the classroom setting.
-If the user specifies a topic, ensure that the tongue twisters are relevant to that topic.
+Negative Prompt:
+- Do not generate tongue twisters that are overly complex or inappropriate for an elementary school audience.
+- Avoid using tongue twisters that do not align with the provided topic if a topic is specified.
+- Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+- Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Example Output:
  {{
@@ -38,4 +38,12 @@ Example Output:
           ],
           "note": "Enjoy the fun and laughter in the classroom!"
         }}
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  number of twisters: {number_of_twisters} or topic: {topic}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid topic and number of twisters."
+}
 """

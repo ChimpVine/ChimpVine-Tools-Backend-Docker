@@ -14,7 +14,6 @@ Negative Prompts:
 1. Avoid flat or predictable stories. Do not provide simple or obvious clues that would make the mystery boring. Do not offer abrupt or unsatisfying conclusions. Ensure the clues require logical reasoning and are not repetitive or random.
 2. Avoid generating stories for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
 3. Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning where possible, ensuring the mystery topic remains logical and coherent.
-4. if the user given gibberish input for {{case_study_topic}} then send message "Please give proper input"
 
 Instructions:
 

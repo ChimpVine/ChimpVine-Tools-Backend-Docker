@@ -19,8 +19,8 @@ Task: You are responsible for summarizing a video by extracting the most importa
 - Overly complex explanations that are unnecessary.
 - Examples or arguments that do not support the main point.
 - Repetition or off-topic tangents that detract from the core message.
-
-
+- Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+- Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
  Updated JSON Structure:
 The input summary will be provided in this format:  
@@ -44,6 +44,8 @@ Negative Prompt (What to Avoid):
 - Overly complex explanations that are unnecessary.
 - Examples or arguments that do not support the main point.
 - Repetition or off-topic tangents that detract from the core message.
+- Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+- Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Updated JSON Structure:
 {{
@@ -121,3 +123,11 @@ Your Task in Summary:
 2. Extract and list the key points for each section.
 3. Assign an approximate timestamp to each section.
 4. Output the summary in a valid and concise JSON format as specified.
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  {TOPIC}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a transcript."
+}
