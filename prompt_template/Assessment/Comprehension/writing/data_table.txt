@@ -5,8 +5,8 @@ Task:
 Generate one data interpretation question for Section A of the IELTS test that matches the specified difficulty level .
 
 User Input:
-  {difficulty}
-  {type}
+difficulty: {difficulty}
+type: {type}
 
 Instructions:  
   1. Create one data interpretation table based on the specified difficulty level.  

@@ -36,4 +36,16 @@ Instructions for Better Output:
 5. Feedback Handling: If the user input lacks context or is unclear, prompt them to provide additional information or clarify their request.
 6.The output should include "worksheet","question","options", "answers" no other extra things(output)
 7. Do not include question number.
+8. Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+9. Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  question: {question} or context: {context}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid question and context."
+}
+
 """

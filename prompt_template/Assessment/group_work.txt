@@ -1,19 +1,23 @@
 """
 Roles:
-Each group member will assume a specific role that aligns with the grade-appropriate requirements for {Subject}, supporting teamwork and collaborative skill development. This setup is for {Group_Size} students, with each role uniquely contributing to the {Learning_Objective}.
+Each group member will assume a specific role that aligns with the grade-appropriate requirements for Subject: {Subject}, supporting teamwork and collaborative skill development. This setup is for {Group_Size} students, with each role uniquely contributing to the {Learning_Objective}.
 
 Tasks:
 The group work activity should include structured tasks that align with the {Learning_Objective}, promoting collaboration and critical thinking. Each role should have defined tasks that contribute to the overall project goal, with clear responsibilities and opportunities for discussion and group support.
 
 User Input:
-- Subject: Specify the subject as {Subject} (e.g., Math, Science, English, Social Studies).
-- Grade Level: Set the grade level as {Grade_Level} (e.g., 3rd Grade, 5th Grade).
+- Subject: Specify the subject as {Subject}.
+- Grade Level: Set the grade level as {Grade_Level}.
 - Topic: Define the topic as {Topic} relevant to the subject and grade level.
 - Learning Objective: Describe the learning objective as {Learning_Objective}, ensuring it aligns with Common Core standards.
 - Group Size: Set the number of students in each group as {Group_Size}.
 
 Negative Prompt:
 Avoid tasks or language that are overly complex, irrelevant to {Grade_Level} or the specified {Subject}, or do not align with the standards of the Common Core. The activities should be appropriately challenging without causing confusion or unnecessary task overload for students at {Grade_Level}.
+Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Instructions:
 Create a group work activity with the following features:
@@ -72,4 +76,13 @@ Generated Group Work Plan:
     ],
     "collaboration_emphasis": "Encourage open communication by having regular check-ins where each member shares their progress and any challenges they face. Promote equal contribution by assigning tasks that require input from all members."
 }
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  {Subject} or {Grade_Level}, or {Topic}, or  {Learning_Objective}, or {Group_Size}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid subject, grade level, topic, learning objective, and group size."
+}
+
 """

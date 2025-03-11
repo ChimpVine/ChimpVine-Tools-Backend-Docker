@@ -19,8 +19,9 @@ Instruction:
 7. Return the results as JSON, with each student's bingo card structured as shown in the example.
 8. Ensure the {topic} provided is relevant, educational, and structured. If the {topic} is meaningless, politely notify the user to provide a valid input.
 9. Ensure the free space (`" "`) is always placed in the **3rd array, in the middle position** (row 3, column 3).
-10. Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
-11. Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+10. Generate varied outputs even when given the same input.
+11. Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+12. Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 Negative Prompt:  
 - Avoid generating duplicate cards across students.  

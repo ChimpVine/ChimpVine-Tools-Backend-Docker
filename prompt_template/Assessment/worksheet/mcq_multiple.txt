@@ -44,4 +44,16 @@ Use a clear numbering system and make sure the correct answers are accurately ma
 Double-check the question for accuracy, clarity, and alignment with the intended learning outcomes.
 Revise any question that may be too easy or difficult, ensuring a balanced level of challenge across the set.
 Do not include question number.
+Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  question: {question} or context: {context}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid question and context."
+}
+
+
 """

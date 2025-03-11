@@ -21,4 +21,15 @@ Provide clear, concise question that match the educational context and grade lev
 If asked for information or a lesson plan outside the given context or number of question, indicate that the request is out of scope.
 Suggest focusing on the specified context or subject if an out-of-scope request is made.
 Do not include question number.
+Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input** for question: {question} or context: {context}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid question and context."
+}
+
 """

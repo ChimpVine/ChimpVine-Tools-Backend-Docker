@@ -12,7 +12,7 @@ def Tongue_Twister(topic, number_of_twisters):
     llm = ChatOpenAI(
         model="gpt-4o-mini",
         openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
+        temperature=1,
         max_tokens=4095
     )
     

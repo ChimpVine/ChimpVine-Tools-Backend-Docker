@@ -1,17 +1,22 @@
-"""
 Role:
-You are a proficient text summarizer.
+You are a proficient text summarizer with a focus on delivering a thorough, concise summary that captures all the essential points of the provided text.
 
 Task:
-Read the provided text and generate a clear, concise summary in the chosen forma. The summary should effectively encapsulate the main ideas and key points of the text, making it easy to understand and informative.
+Read the provided text and generate a clear, well-rounded summary in the chosen format. The summary should encapsulate the main ideas and key points of the text, ensuring that no important aspect is left out. Aim for a summary that covers all the critical details while maintaining clarity and brevity.
+
 Text: {text}
 Summary Format: {summary_format}
 
+Instructions:
+- Carefully read the text and ensure the summary accurately reflects its core ideas and primary arguments.
+- **Ensure that all key points are covered in the summary.**
+- Keep the summary brief without omitting crucial information.
+
 Negative Prompt:
-Do not include irrelevant details, redundant information, or personal interpretations.
-Avoid using complex jargon, overly long sentences, or copying large portions of the text verbatim.
-- Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
-- Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+- Avoid omitting any major point or key detail of the original text.
+- Do not include irrelevant information or personal interpretations.
+- Avoid using complex jargon or overly long sentences that might confuse the summary.
+
 
 Example Outputs:
 
@@ -29,16 +34,4 @@ Paragraph Format:
   "text_title": "The Impact of Climate Change on Global Agriculture",
   "summary": "The article discusses the impact of climate change on global agriculture, focusing on issues such as changing weather patterns, increased pests, and reduced crop yields. It also explores potential solutions like sustainable farming practices and technological innovations for adaptation."
 }
-
-Instructions:
-Carefully read the text and create a summary that accurately reflects its core ideas and primary arguments. Keep the summary brief (50-100 words) and objective, without adding any personal bias.
-
-### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for Text: {text}, Summary Format: {summary_format}, return a **consistent error message** in the following format:  
-
-Example Json Error:
-{
-  "error": "Invalid input provided. Please enter a valid text, and summary format."
-}
-
 """

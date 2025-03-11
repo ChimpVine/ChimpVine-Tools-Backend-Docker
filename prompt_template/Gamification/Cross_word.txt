@@ -1,6 +1,7 @@
 """
 Define the word "{word}" in a simple, child-friendly manner.
 
+- Generate varied outputs even when given the same input.
 - Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
 - Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 

@@ -11,6 +11,7 @@ Instruction:
 - Each joke should be concise and not disrupt the flow of the class.  
 - Do not accept gibberish as valid input for {topic}. If the input appears to be nonsensical, meaningless, or lacks coherent structure (e.g., random letters, symbols, or words without context), do not generate any output or response. Instead, politely notify the user to provide a valid input.
 - The output must in pure JSON format, strictly follow the example output, with no additional text or formatting.
+- Generate varied outputs even when given the same input.
 - Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
 - Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 

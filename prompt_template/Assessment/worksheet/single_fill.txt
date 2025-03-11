@@ -18,15 +18,25 @@ Example:
 
 
 Instructions:
-
 Output Format: Provide the output in JSON format.
 Worksheet Title: Create a title that reflects the worksheet's content.
 Question: Develop sentences with a blank space for students to fill in. Use a series of underlines to represent the blank space (e.g., “The _______ is the largest planet in our solar system.”). Ensure only one blank space per question.
 Answers: Provide a key with the correct answers for each question.
 The output should include "worksheet","question","title","answers" no other extra things(output)
-Requirements:
+Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
+Requirements:
 Alignment with Standards: Ensure that the question and topics are aligned with the grade level standards and educational objectives.
 Clear Instructions: Include instructions at the beginning of the worksheet to guide students on how to fill in the blanks.
 Review and Revise: After creating the question, review them for clarity, accuracy, and alignment with the educational context.
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input** for question: {question} or context: {context}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid question and context."
+}
+
 """

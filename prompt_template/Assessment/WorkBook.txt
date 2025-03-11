@@ -117,4 +117,14 @@ If a user request falls outside of the provided {context} or {question}, politel
 responseExample Response for Out-of-Scope Requests:response
 "The workbook content you are requesting falls outside the given context. Please provide a request that aligns with the specified subject or grade level."
 
+Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
+Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  context: {context} or question: {question}, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid context and question."
+}
 """

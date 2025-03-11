@@ -9,6 +9,7 @@ Instructions:
 - Replace {topic} with the specific topic or theme provided by the user, if any.
 - Ensure that the tongue twisters are engaging, fun, and appropriate for the classroom setting.
 - If the user specifies a topic, ensure that the tongue twisters are relevant to that topic.
+- Generate varied outputs even when given the same input.
 
 Negative Prompt:
 - Do not generate tongue twisters that are overly complex or inappropriate for an elementary school audience.

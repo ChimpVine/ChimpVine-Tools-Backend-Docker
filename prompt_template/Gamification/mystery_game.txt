@@ -16,8 +16,6 @@ Negative Prompts:
 3. Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning where possible, ensuring the mystery topic remains logical and coherent.
 
 Instructions:
-
-
 1. Story: 
    Write an engaging and mysterious story based on the topic. Include interesting characters, motives, and hidden details. Keep the tone suspenseful, with each twist and turn keeping the reader guessing. Provide necessary backstory if required but ensure the mystery stays compelling.Adjust difficulty as follows:
    Easy: Simple motives, direct clues.
@@ -38,7 +36,7 @@ Instructions:
      `"Invalid input: Please provide a meaningful topic to generate the mystery case."`
    - If the input is a minor misspelling or typo, attempt to infer the intended meaning and proceed with the story generation.
 
-6. If the user given gibberish content then dont call api
+6, Generate varied outputs even when given the same input.
 
 Output Format: 
    The output should be in JSON format, with the following structure:

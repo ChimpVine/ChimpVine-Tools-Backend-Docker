@@ -29,7 +29,9 @@ Instructions:
      - Hard: Hints can include more complex definitions or references that require deeper thinking or knowledge.
    - The hints should not make the word too easy to guess, but they should provide enough context for the difficulty level.
 
-3. Formatting:
+3. Generate varied outputs even when given the same input.
+
+4. Formatting:
    [
      {
        "word": "Generated word 1",
