@@ -21,18 +21,24 @@ Example output:
     "topic": "space",
     "number_of_jokes": 2,
     "jokes": [
-      "Why did the cow go to space? To see the Milky Way!",
-      "Why don’t astronauts eat at restaurants on the moon? Because there’s no atmosphere!"
+      {
+        "question": "Why did the cow go to space?",
+        "answer": "To see the Milky Way!"
+      },
+      {
+        "question": "Why don’t astronauts eat at restaurants on the moon?",
+        "answer": "Because there’s no atmosphere!"
+      }
     ]
   }
 }
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for  number_of_jokes: {number_of_jokes} or topic: {topic}, return a **consistent error message** in the following format:  
+- If the user provides **gibberish** or **invalid input**  for topic: {topic}, return a **consistent error message** in the following format:  
 
 Example Json Error:
 {
-  "error": "Invalid input provided. Please enter a valid topic and number of jokes."
+  "error": "Invalid input provided. Please enter a valid topic."
 }
 
 """

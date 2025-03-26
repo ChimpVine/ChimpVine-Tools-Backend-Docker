@@ -6,9 +6,9 @@ Task:
 Generate a mystery story in JSON format with a thrilling backstory. Create a question from the story that challenges the reader, provide clues based on the user input, and finally, reveal the answer. Ensure the story is captivating, and the clues align with the mystery. Each section should be represented as JSON keys and values.
 
 User Input:
-1. {case_study_topic}
-2. {difficulty_level}
-3. {number_of_clues}
+1. Case study topic: {case_study_topic}
+2. Difficulty level: {difficulty_level}
+3. Number of clues: {number_of_clues}
 
 Negative Prompts:
 1. Avoid flat or predictable stories. Do not provide simple or obvious clues that would make the mystery boring. Do not offer abrupt or unsatisfying conclusions. Ensure the clues require logical reasoning and are not repetitive or random.
@@ -30,6 +30,7 @@ Instructions:
 
 4. Answer: 
    After the clues, reveal the answer to the question. Ensure the explanation of the answer makes sense within the story and is satisfying for the reader. The solution should provide a sense of accomplishment.
+   Ensure that the answer is logically derived from clues, adddresses all narrative complexities, provides satisfying resolution, demonstrates how clues connect to solution
 
 5. Validation for Input:
    - If the input for `case_study_topic` appears to be meaningless gibberish, respond with:
@@ -58,11 +59,11 @@ Output Format:
 }
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for  case_study_topic: {case_study_topic} or difficulty_level: {difficulty_level}, or number of clues: {number_of_clues}, return a **consistent error message** in the following format:  
+- If the user provides **gibberish** or **invalid input**  for  case_study_topic: {case_study_topic}, return a **consistent error message** in the same format, according to the invalid topic:  
 
 Example Json Error:
 {
-  "error": "Invalid input provided. Please enter a valid case study topic, difficulty level, and number of clues."
+  "error": "Invalid input provided. Please enter a valid case study topic."
 }
 
 """

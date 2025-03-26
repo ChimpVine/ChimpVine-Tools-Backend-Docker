@@ -145,7 +145,7 @@ def extract_text_from_pdf(pdf_path):
 
     return text
 
-def validate_string(input_value, field_name, min_length=1, max_length=None, allow_special_chars=False):
+def validate_string(input_value, field_name, min_length=1, max_length=None):
     if not isinstance(input_value, str):
         return False, f"{field_name} must be a string."
     
@@ -161,11 +161,7 @@ def validate_string(input_value, field_name, min_length=1, max_length=None, allo
     if max_length and length > max_length:
         return False, f"{field_name} must be no longer than {max_length} characters."
 
-    # Build regex based on allowed characters
-    pattern = r'^[a-zA-Z\s]+$'  # Default: only letters and spaces
-
-    if allow_special_chars:
-        pattern = r'^[a-zA-Z0-9\s\W]+$'  # Allows special characters
+    pattern = r'^(?:[a-zA-Z\s]+|(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9\s]+)$'
 
     if not re.match(pattern, input_value):
         return False, f"{field_name} contains invalid characters."
@@ -1099,7 +1095,7 @@ def teacher_joke_API():
     if not all([topic, number_of_jokes]):
         return jsonify({'error': 'Missing required field: topic, number of jokes'}), 400
     
-     # Validate 'topic' field
+    # Validate 'topic' field
     valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
     if not valid:
         return jsonify({"error": error}), 400
@@ -1121,23 +1117,28 @@ def teacher_joke_API():
     Token = tool.get('Token')
     print(f"Tool ID: {Tool_ID}, Token Index: {Token}")
 
-      # Verify tokens before proceeding
+    # Verify tokens before proceeding
     try:
-        token_verification = verify_token(auth_token, site_url,Tool_ID,Token)
+        token_verification = verify_token(auth_token, site_url, Tool_ID, Token)
 
         # Check if the token verification was successful
         if token_verification.get('status') == 'success':
             response = generate_joke(topic, number_of_jokes)
+            
+            # New error handling for LLM response
             if response is None:
-                    return jsonify({'error': 'Failed to generate Teacher joke '}), 500
+                return jsonify({'error': 'Failed to generate Teacher joke'}), 500
+            
+            # Check if the response contains an error key
+            if 'error' in response:
+                return jsonify(response), 400
 
             # Prepare and return the response
             result = jsonify(response)
             result.status_code = 200
 
             # Call use_token() only if the status code is 200
-            if result.status_code == 200:
-                use_token(auth_token, site_url,Tool_ID,Token)
+            use_token(auth_token, site_url, Tool_ID, Token)
 
             return response
         else:
@@ -1151,7 +1152,6 @@ def teacher_joke_API():
     except Exception as e:
         print(f"Error processing request: {e}")
         return jsonify({'error': str(e)}), 500
-
 
 @app.route('/generate_sel_plan', methods=['POST'])
 def generate_sel_plan_API():
@@ -1560,6 +1560,10 @@ def mystery_game_API():
                 response = generate_mysterycase(topic, difficulty, no_of_clues)
                 if response is None:
                     return jsonify({'error': 'Failed to generate Mystery game quiz'}), 500
+                
+                # Check if the response contains an error key
+                if 'error' in response:
+                    return jsonify(response), 400
 
                 result = jsonify(response)
                 result.status_code = 200
@@ -2153,9 +2157,9 @@ def google_sheet():
         return jsonify({"error": str(e)}), 500
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
-    
-    
 # if __name__ == '__main__':
-#     app.run(debug=True, host='0.0.0.0', port=8080)
+#     app.run(debug=True)
+    
+    
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=8080)
