@@ -31,6 +31,7 @@ Negative Prompt:
 - Do not accept gibberish as valid input for {topic}. If the input appears to be nonsensical, meaningless, or lacks coherent structure (e.g., random letters, symbols, or words without context), do not generate any output or response. Instead, politely notify the user to provide a valid input.
 - Avoid placing the free space anywhere other than the **3rd array, middle position**.  
 - Do not leave any cell other than the designated free space empty.
+- Ensure proper capitilization of content in the JSON output.
 
 Example Output:  
 {
@@ -55,11 +56,11 @@ Example Output:
 }
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for  {topic} or {number_of_students}, return a **consistent error message** in the following format:  
+- If the user provides **gibberish** or **invalid input**  for  {topic}, return a **consistent error message** in the following format:  
 
 Example Json Error:
 {
-  "error": "Invalid input provided. Please enter a valid topic and number of students."
+  "error": "Invalid input provided. Please enter a valid topic."
 }
 
 """

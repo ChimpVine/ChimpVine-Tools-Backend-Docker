@@ -901,18 +901,23 @@ def generate_fun_math_API():
         # Check if the token verification was successful
         if token_verification.get('status') == 'success':
             # Generate social story
-            result = math_problem_generation(grade_level, math_topic, interest)
+            response = math_problem_generation(grade_level, math_topic, interest)
+            # Check if the response contains an error key
+            if 'error' in response:
+                return jsonify(response), 400
 
             # Prepare the response
-            response = jsonify(result)
+            response = jsonify(response)
+            
+            
             response.status_code = 200
-
+        
             # Call use_token() only if the status code is 200
             if response.status_code == 200:
                 use_token(auth_token, site_url,Tool_ID,Token)
 
             # Return the result
-            return result
+            return response
 
         else:
             # Print the verification response and return its status and message
@@ -1284,10 +1289,20 @@ def make_the_word_API():
             if token_verification.get('status') == 'success':
                 # Generate the make the word game
                 response = generate_make_the_word(theme, difficulty_level, number_of_words)
+                
+                # Parse the output into a JSON object if necessary
+                response = response.replace("```", "").replace("json", "").replace("\n", "").replace("\\", "")
+                response = json.loads(response)
 
                 if response is None:
                     return jsonify({'error': 'Failed to generate make the word game'}), 500
-
+                
+                # Check if the response contains an error key
+                if 'error' in response:
+                    response.pop('letters', None)
+                    response.pop('words', None)
+                    return jsonify(response), 400
+                
                 # Prepare and return the response
                 result = jsonify(response)
                 result.status_code = 200
@@ -1385,6 +1400,10 @@ def SAT_maths_API():
                 response = generate_math_quiz(topic, part1_qs, part2_qs, part3_qs, part4_qs, difficulty)
                 if response is None:
                     return jsonify({'error': 'Failed to generate SAT math quiz'}), 500
+                
+                # Check if the response contains an error key
+                if 'error' in response:
+                    return jsonify(response), 400
 
                 result = jsonify(response)
                 result.status_code = 200
@@ -1484,6 +1503,10 @@ def generate_bingo_cards():
             response = generate_bingo(topic, num_students)
             if response is None:
                 return jsonify({'error': 'Failed to generate SAT math quiz'}), 500
+            
+            # Check if the response contains an error key
+            if 'error' in response:
+                return jsonify(response), 400
 
             result = jsonify(response)
             result.status_code = 200
@@ -1870,7 +1893,12 @@ from utils.Summarizer.youtube import YT_summary_generation
 def get_response():
     try:
         # Get the topic input from the user
-        topic = request.json.get('topic')
+        # topic = request.json.get('topic')
+        topic = request.json.get('topic', '').strip()
+
+        if not topic:
+            return jsonify({"error": "Video Transcript cannot be empty"}), 400
+
  
         prompt = YT_summary_generation(topic)
             

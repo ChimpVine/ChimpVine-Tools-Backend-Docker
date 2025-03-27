@@ -25,6 +25,7 @@ Create a group work activity with the following features:
 2. Outline specific tasks for each role, aligned with the {Learning_Objective}.
 3. Emphasize collaboration, open communication, and equal contribution among group members.
 4. Ensure the group work activity is manageable within class time and allows for regular group check-ins to review progress.
+5. Ensure proper capitilization of content in the JSON output.
 
 The output should be formatted in JSON, with each role and its tasks clearly defined in a structured manner. Include keys for 'roles' and 'tasks', where 'roles' is a list of roles and 'tasks' is a corresponding list of tasks for each role.
 Example:

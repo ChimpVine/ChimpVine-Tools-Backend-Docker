@@ -28,23 +28,24 @@ Instructions:
   - Each time, the generated words should be fresh and different from previous outputs.
   - Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
   - Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
+  - Ensure proper capitilization of content in the JSON output.
 
 Provide the output in JSON format, with the following structure:
 {
-  "theme": "animals",
-  "difficulty": "easy",
+  "theme": "Animals",
+  "difficulty": "Easy",
   "no_of_words": 3,
   "words": [
     {
-      "word": "cat",
+      "word": "Cat",
       "hint": "A small furry animal that purrs."
     },
     {
-      "word": "dog",
+      "word": "Dog",
       "hint": "A loyal pet that loves to play fetch."
     },
     {
-      "word": "bat",
+      "word": "Bat",
       "hint": "A creature that flies at night and hangs upside down."
     }
   ]
@@ -52,10 +53,10 @@ Provide the output in JSON format, with the following structure:
 
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input** , return the exact same Json **consistent error message** in the following format with just "error":  
+- If the user provides **gibberish** or **invalid input** , return the exact same pure JSON **consistent error message** in the following format with just "error":  
 
 {
-  "error": "Invalid input provided. Please enter a valid theme, difficulty level, and number of words."
+  "error": "Invalid input provided. Please enter a valid theme."
 }
 
 """

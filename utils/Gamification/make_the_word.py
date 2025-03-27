@@ -57,7 +57,9 @@ def generate_make_the_word(theme, difficulty_level, number_of_words):
         response_text = response.content.strip()
 
         # Clean up formatting issues
-        response_text = response_text.replace("```json", "").replace("```", "").strip()
+
+        response_text = response_text.replace("```", "").replace("json", "").replace("\n", "").replace("\\", "")
+
 
     except Exception as e:
         return f"Error generating word-building game: {e}"

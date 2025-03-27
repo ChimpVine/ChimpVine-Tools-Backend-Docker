@@ -96,11 +96,11 @@ The output should be in pure JSON format and the variables should be the exact s
 
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for  {grade_level} or {math_topic}, or {interest}, return a **consistent error message** in the following format:  
+- If the user provides **gibberish** or **invalid input**  for  {grade_level} or {math_topic}, or {interest}, return a **consistent error message** in the exact format as below:  
 
 Example Json Error:
 {
-  "error": "Invalid input provided. Please enter a valid grade level, math topic, and interest."
+  "error": "Invalid input provided. Please enter a valid math topic, and interest."
 }
 
 """

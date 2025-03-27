@@ -68,14 +68,13 @@ def generate_bingo(topic, num_students):
         return None  # Handle the error as needed
     
         # Parse the output into a JSON object if necessary
-    try:
-        bingo = json.loads(output)
-    except json.JSONDecodeError:
-        print("Failed to parse response as JSON. Returning raw output.")
-        bingo = {"error": "Failed to decode response", "response": output}
+    output = output.replace("```", "").replace("json", "").replace("\n", "").replace("\\", "")
+
+    output = json.loads(output)
+
 
     # Print the generated jokes
-    print(json.dumps(bingo, indent=4))
+    # print(json.dumps(bingo, indent=4))
     
 
     return output
