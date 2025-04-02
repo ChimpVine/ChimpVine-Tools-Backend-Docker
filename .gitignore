@@ -2,3 +2,4 @@ Tools.json
 .env
 credentials.json
 venv
+.DS_Store
