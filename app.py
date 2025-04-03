@@ -1888,29 +1888,56 @@ def generate_data():
 # New import for YT
 from utils.Summarizer.youtube import YT_summary_generation
 
-# New YouTube code (try)
+# # New YouTube code (try)
+# @app.route('/YT_summary', methods=['POST'])
+# def get_response():
+#     try:
+#         # Get the topic input from the user
+#         # topic = request.json.get('topic')
+#         topic = request.json.get('topic', '').strip()
+
+#         if not topic:
+#             return jsonify({"error": "Video Transcript cannot be empty"}), 400
+
+ 
+#         prompt = YT_summary_generation(topic)
+            
+#         response_text = prompt
+#         print("This is the output:", response_text)
+        
+#         # Render the result template with the response
+#         return response_text
+    
+#     except Exception as e:
+#         # Render error message
+#         return response_text
 @app.route('/YT_summary', methods=['POST'])
 def get_response():
     try:
         # Get the topic input from the user
-        # topic = request.json.get('topic')
         topic = request.json.get('topic', '').strip()
 
         if not topic:
             return jsonify({"error": "Video Transcript cannot be empty"}), 400
-
- 
-        prompt = YT_summary_generation(topic)
-            
-        response_text = prompt
-        print("This is the output:", response_text)
+        # Validate 'topic' field
+        valid, error = validate_string(topic, "Topic", min_length=3)
+        if not valid:
+            return jsonify({"error": error}), 400
+        print(topic)
+        # Assuming YT_summary_generation is a function that processes the topic and returns the summary
+        response_text = YT_summary_generation(topic)
         
-        # Render the result template with the response
+        # Print the output for debugging purposes
+        print("This is the output:", response_text)
+                
+        # Return the generated summary as JSON if no error is found
         return response_text
     
     except Exception as e:
-        # Render error message
+        # Handle any exceptions that occur during the process
+        print("Error occurred:", str(e))
         return response_text
+
 
 
 def api_request(auth_token, site_url, endpoint_suffix, Tool_ID,Token):
