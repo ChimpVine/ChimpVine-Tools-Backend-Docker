@@ -625,6 +625,9 @@ def Word_puzzle_API():
         if token_verification.get('status') == 'success':
             # Generate word puzzle
             result = Word_puzzle(topic, numberofword, difficulty_level)
+            
+            if 'error' in result:
+                return jsonify(result), 400
 
             # Prepare the response
             response = jsonify(result)
@@ -714,11 +717,14 @@ def Group_work_API():
         if token_verification.get('status') == 'success':
             # Generate group work activity
             result = generate_group_work(subject, grade, topic, learning_objective, group_size)
+            
+            if 'error' in result:
+                return jsonify(result), 400
 
             # Prepare the response
             response = jsonify(result)
             response.status_code = 200
-
+            
             # Call use_token() only if the status code is 200
             if response.status_code == 200:
                 use_token(auth_token, site_url,Tool_ID,Token)
@@ -826,6 +832,9 @@ def Social_stories_API():
             # Prepare the response
             response = jsonify(result)
             response.status_code = 200
+            
+            if 'error' in result:
+                return jsonify(result), 400
 
             # Call use_token() only if the status code is 200
             if response.status_code == 200:
@@ -973,6 +982,9 @@ def slide_one_API():
             # Check if the response is valid
             if response is None:
                 return jsonify({'error': 'No valid response from first_slide'}), 500
+            
+            if 'error' in result:
+                return jsonify(response), 400
 
             # Prepare the successful response
             result = jsonify(response)
@@ -1057,6 +1069,9 @@ def text_summarizer_API():
 
             if response is None:
                 return jsonify({'error': 'No valid response from summary_generation'}), 500
+            
+            if 'error' in response:
+                return jsonify(response), 400
 
             # Prepare and return the summary response
             result = jsonify(response)
@@ -1211,6 +1226,9 @@ def generate_sel_plan_API():
 
             if response is None:
                 return jsonify({'error': 'Failed to generate SEL plan'}), 500
+            
+            if 'error' in response:
+                return jsonify(response), 400
 
             # Prepare and return the response
             result = jsonify(response)
@@ -1669,6 +1687,10 @@ def generate_vocab_list():
             # If the token is valid, generate vocabulary list
             result = vocabulary_generation(grade_level, subject, topic, num_words, difficulty_level)
              # After generating the vocabulary list, return the result
+             
+            if 'error' in result:
+                return jsonify(result), 400
+            
             response = jsonify(result)
             response.status_code = 200 
             # Call use_token() after sending a successful response
