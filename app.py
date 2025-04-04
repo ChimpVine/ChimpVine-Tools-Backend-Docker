@@ -565,6 +565,10 @@ def generate_rubric():
     try:
         # Call your rubric generation function
         result = rubric_generation(grade_level, assignment_description, point_scale, additional_requirements)
+        
+        if 'error' in result:
+            return jsonify(result), 400
+        
         return result
     except Exception as e:
         print(f"Error processing request: {e}")
@@ -1827,8 +1831,12 @@ def generate_passage_api():
         difficulty=difficulty,
         no_of_words=no_of_words,
     )
+    
     if passage is None:
         return jsonify({'error': 'Failed to generate passage'}), 500
+    
+    if 'error' in passage:
+        return jsonify(passage), 400
 
     return jsonify({"passage": passage}), 200
 
@@ -1863,6 +1871,9 @@ def generate_question_api():
         )
         if question is None:
             return jsonify({'error': 'Failed to generate question'}), 500
+        
+        if 'error' in question:
+            return jsonify(question), 400
 
         return question, 200
         
@@ -1886,6 +1897,9 @@ def generate_writing():
         question = generate_writing_options(topic, difficulty, type)
         if question is None:
             return jsonify({"status": "error", "message": "Failed to generate data"}), 500
+        
+        if 'error' in question:
+            return jsonify(question), 400
 
         return jsonify(question),200
 
@@ -2234,9 +2248,9 @@ def google_sheet():
         return jsonify({"error": str(e)}), 500
 
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
-    
-    
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=True)
+    
+    
+# if __name__ == '__main__':
+#     app.run(debug=True, host='0.0.0.0', port=8080)
