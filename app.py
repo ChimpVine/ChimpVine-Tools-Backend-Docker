@@ -1955,11 +1955,11 @@ def get_response():
 
         if not topic:
             return jsonify({"error": "Video Transcript cannot be empty"}), 400
-        # Validate 'topic' field
-        valid, error = validate_string(topic, "Topic", min_length=3)
-        if not valid:
-            return jsonify({"error": error}), 400
-        print(topic)
+        # # Validate 'topic' field
+        # valid, error = validate_string(topic, "Topic", min_length=3)
+        # if not valid:
+        #     return jsonify({"error": error}), 400
+        # print(topic)
         # Assuming YT_summary_generation is a function that processes the topic and returns the summary
         response_text = YT_summary_generation(topic)
         
