@@ -48,8 +48,6 @@ def create_word_puzzle(data):
     
     return puzzles
 
-    
-    return puzzles
 def Word_puzzle(topic, numberofword, difficulty_level):
     llm = ChatOpenAI(
         model="gpt-4o-mini",
@@ -90,7 +88,8 @@ def Word_puzzle(topic, numberofword, difficulty_level):
         return "Error: Unable to load prompt template."
 
     def prompt(topic, numberofword, difficulty_level):
-        prompt = prompt_template.replace("{topic}", topic).replace("{number_of_words}", numberofword).replace("{difficulty_level}", difficulty_level)
+        # prompt = prompt_template.replace("{topic}", topic).replace("{number_of_words}", numberofword).replace("{difficulty_level}", difficulty_level)
+        prompt = prompt_template.replace("{topic}", topic).replace("{number_of_words}", str(numberofword)).replace("{difficulty_level}", difficulty_level)
         try:
             response = llm.predict(prompt)
             return response

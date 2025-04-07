@@ -157,7 +157,7 @@ def validate_string(input_value, field_name, min_length=1, max_length=None):
 
     if length < min_length:
         return False, f"{field_name} must be at least {min_length} characters long."
-    
+       
     if max_length and length > max_length:
         return False, f"{field_name} must be no longer than {max_length} characters."
 
@@ -226,6 +226,9 @@ def api_generate_lesson_plan():
             # Generate lesson plan
             command = f"Lesson: {lesson}\nGrade: {grade}\nDuration: {duration}\nSubject: {subject}"
             lesson_plan = generate_lesson_plan(pdf_text, command)
+            
+            if 'error' in lesson_plan:
+                return jsonify(lesson_plan), 400
 
             # Clean up by removing the saved PDF file
             os.remove(pdf_path)
@@ -314,6 +317,9 @@ def api_generate_workbook():
 
             # Clean up by removing the saved PDF file
             os.remove(pdf_path)
+            
+            if 'error' in workbook:
+                return jsonify(workbook), 400
 
             # Prepare the response
             response = jsonify(workbook)
@@ -404,7 +410,10 @@ def generate_quiz():
             start_time = time.time()
             quiz = quiz_generator(topic, language, subject, number, difficulty)
             print("Time taken:", time.time() - start_time)
-
+            
+            if 'error' in quiz:
+                return jsonify(quiz), 400
+            
             # Prepare the response
             response = jsonify(quiz)
             response.status_code = 200
@@ -509,6 +518,9 @@ def generate():
                 response = generate_ps_math(subject, grade, number_of_questions, topic, pdf_text)
             else:
                 return jsonify({"error": "Question type not supported"}), 400
+            
+            if 'error' in response:
+                return jsonify(response), 400
 
              # Prepare the response
             result = jsonify(response)
@@ -2248,9 +2260,9 @@ def google_sheet():
         return jsonify({"error": str(e)}), 500
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
-    
-    
 # if __name__ == '__main__':
-#     app.run(debug=True, host='0.0.0.0', port=8080)
+#     app.run(debug=True)
+    
+    
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=8080)
