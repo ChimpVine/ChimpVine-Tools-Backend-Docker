@@ -41,10 +41,10 @@ Example Output:
         }}
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for  number of twisters: {number_of_twisters} or topic: {topic}, return a **consistent error message** in the following format:  
+- If the user provides **gibberish** or **invalid input**  for topic: {topic}, return a **consistent error message** in the following format:  
 
 Example Json Error:
 {
-  "error": "Invalid input provided. Please enter a valid topic and number of twisters."
+  "error": "Invalid input provided. Please enter a valid topic."
 }
 """

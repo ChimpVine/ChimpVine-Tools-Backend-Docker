@@ -48,4 +48,13 @@ Output Format: Use the following structure to generate the story in valid JSON f
     "conclusion": "Sarah feels proud when she uses these steps to stay calm and share with her friends. She knows that it's okay to take breaks when needed, and that sharing can still be fun."
   }
 }
+
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for these inputs, child name: {child_name}, or behavior challenge: {behavior_challenge}, scenario: {scenario}, or ideal behavior: {ideal_behavior} no gibberish value should be accepted, return a **consistent error message** in the following format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid input for child name, or behavior challenge, scenario, or ideal behavior."
+}
 """

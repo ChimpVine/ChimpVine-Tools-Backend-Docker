@@ -1,6 +1,7 @@
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -64,8 +65,10 @@ def summary_generation(text, summary_format):
         return "Error: Unable to generate lesson plan."
 
     # Clean up the lesson plan output
-    output = output.replace("json", "")
-    print("Cleaned Output:", output)
+    # output = output.replace("json", "")
+    output = output.replace("json", "").replace("`", "").replace("\n", "")
     
+    output = json.loads(output)
     return output
+
 

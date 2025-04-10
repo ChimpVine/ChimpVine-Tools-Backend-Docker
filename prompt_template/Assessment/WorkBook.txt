@@ -110,18 +110,11 @@ Instruction for Each Section:
 
 - responseAnswers:response Provide the correct answers for the exercises, ensuring each answer is linked to the corresponding question.
 
-Out-of-Scope Response:
-
-If a user request falls outside of the provided {context} or {question}, politely indicate that the request is out of scope. Suggest they focus on the specific context or subject specified.
-
-responseExample Response for Out-of-Scope Requests:response
-"The workbook content you are requesting falls outside the given context. Please provide a request that aligns with the specified subject or grade level."
-
 Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
 Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for  context: {context} or question: {question}, return a **consistent error message** in the following format:  
+- If the user If a user request falls outside of the provided scope or provides **gibberish** or **invalid input**  for  context: {context} or question: {question}, return a **consistent error message** in the following format:  
 
 Example Json Error:
 {

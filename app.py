@@ -161,7 +161,8 @@ def validate_string(input_value, field_name, min_length=1, max_length=None):
     if max_length and length > max_length:
         return False, f"{field_name} must be no longer than {max_length} characters."
 
-    pattern = r'^(?:[a-zA-Z\s]+|(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9\s]+)$'
+    # Updated regex pattern to accept letters, digits, spaces, periods, comma and apostrophes
+    pattern = r"^(?![\s.,']+$)[a-zA-Z0-9\s.,']+$"
 
     if not re.match(pattern, input_value):
         return False, f"{field_name} contains invalid characters."
@@ -195,8 +196,8 @@ def api_generate_lesson_plan():
     if not all([file, lesson, grade, duration, subject]):
         return jsonify({"error": "Missing required fields or file"}), 400
     
-    # Validate 'Topic' field
-    valid, error = validate_string(lesson, "Lesson (File Description)", min_length=3, max_length=500)
+    # Validate 'lesson' field
+    valid, error = validate_string(lesson, " File Description", min_length=3, max_length=250)
     if not valid:
         return jsonify({"error": error}), 400
 
@@ -281,8 +282,8 @@ def api_generate_workbook():
     if not all([file, lesson, grade, subject]):
         return jsonify({"error": "Missing required fields or file"}), 400
     
-    # Validate 'Lesson (Topic)' field
-    valid, error = validate_string(lesson, "Lesson (Topic)", min_length=3, max_length=50)
+    # Validate 'Description' field
+    valid, error = validate_string(lesson, "Description", min_length=3, max_length=250)
     if not valid:
         return jsonify({"error": error}), 400
     
@@ -465,6 +466,11 @@ def generate():
     # Validate required fields
     if not all([subject, grade, number_of_questions, question_type]):
         return jsonify({"error": "Missing required fields"}), 400
+    
+    # Validate 'Description' field
+    valid, error = validate_string(topic, "Description", min_length=3, max_length=250)
+    if not valid:
+        return jsonify({"error": error}), 400
 
     pdf_text = None
     # Get the "Lesson Planner" tool details
@@ -980,6 +986,26 @@ def slide_one_API():
     # Validate required fields
     if not all([grade, topic, learning_objectives, number_of_slides]):
         return jsonify({'error': 'Missing required fields'}), 400
+    
+    # Validate 'math_topic' field (Non-gibberish and reasonable length)
+    valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+
+    # Validate 'interest' field (Non-gibberish and reasonable length)
+    valid, error = validate_string(learning_objectives, "Learning objectives", min_length=3, max_length=50)
+    if not valid:
+        return jsonify({"error": error}), 400
+    
+    # Validate 'number of slides' (valid no.of slides are integers from 1 to 10)
+    try:
+        number_of_slides = int(number_of_slides)
+        if number_of_slides < 1 or number_of_slides > 10:
+            raise ValueError
+    except ValueError:
+        return jsonify({"error": "Invalid number of slides. It must be an integer between 1 and 10."}), 400
+
+    
     # Get the "Lesson Planner" tool details
     tool = get_tool_by_name(tools, "Slide Generator")
     if not tool:
@@ -1085,13 +1111,15 @@ def text_summarizer_API():
 
             if response is None:
                 return jsonify({'error': 'No valid response from summary_generation'}), 500
-            
+
+
             if 'error' in response:
                 return jsonify(response), 400
-
+            
             # Prepare and return the summary response
             result = jsonify(response)
             result.status_code = 200
+
 
             # Call use_token() only if the status code is 200
             if result.status_code == 200:
@@ -1416,6 +1444,16 @@ def SAT_maths_API():
         # Check if all question counts are zero
         if part1_qs == 0 and part2_qs == 0 and part3_qs == 0 and part4_qs == 0:
             return jsonify({"error": "At least one question count must be greater than 0."}), 400
+        
+                # Validate 'theme' field
+        valid, error = validate_string(topic, "Topic", min_length=3, max_length=50)
+        if not valid:
+            return jsonify({"error": error}), 400
+        
+        valid, error = validate_string(difficulty, "Difficulty", min_length=3, max_length=50)
+        if not valid:
+            return jsonify({"error": error}), 400
+        
         # Get the "Lesson Planner" tool details
         tool = get_tool_by_name(tools, "SAT maths")
         if not tool:
@@ -1456,7 +1494,6 @@ def SAT_maths_API():
         except Exception as e:
             print(f"Error processing request: {e}")
             return jsonify({'error': str(e)}), 500
-
 
 
 # For SAT english quiz
@@ -1518,8 +1555,8 @@ def generate_bingo_cards():
         return jsonify({"error": "Invalid number of students"}), 400
 
     
-    # Get the "Lesson Planner" tool details
-    tool = get_tool_by_name(tools, "SAT maths")
+    # Get the "Bingo" tool details
+    tool = get_tool_by_name(tools, "Bingo")
     if not tool:
         return jsonify({"error": "Tool not found"}), 500
 
@@ -1598,7 +1635,7 @@ def mystery_game_API():
         except ValueError:
             return jsonify({'error': 'Number of clues must be an integer between 1 and 50.'}), 400
         
-        # Get the "Lesson Planner" tool details
+        # Get the "Mystery game" tool details
         tool = get_tool_by_name(tools, "Mystery game")
         if not tool:
             return jsonify({"error": "Tool not found"}), 500
@@ -1738,7 +1775,6 @@ def generate_tongue_twisters():
     if not site_url:
         return jsonify({"error": "Missing 'X-Site-Url' header"}), 400
 
-    # Extract form data
     # Extract form data and file (supports both form and JSON inputs)
     data = request.form or request.json
     topic = data.get('topic')
@@ -1959,6 +1995,7 @@ from utils.Summarizer.youtube import YT_summary_generation
 #     except Exception as e:
 #         # Render error message
 #         return response_text
+
 @app.route('/YT_summary', methods=['POST'])
 def get_response():
     try:
@@ -1967,25 +2004,21 @@ def get_response():
 
         if not topic:
             return jsonify({"error": "Video Transcript cannot be empty"}), 400
-        # # Validate 'topic' field
-        # valid, error = validate_string(topic, "Topic", min_length=3)
-        # if not valid:
-        #     return jsonify({"error": error}), 400
-        # print(topic)
+
+        # Check if the topic consists of only symbols or spaces
+        if not re.search(r'[a-zA-Z]', topic):
+            return jsonify({"error": "Video Transcript cannot be pure symbols or spaces"}), 400
+        
         # Assuming YT_summary_generation is a function that processes the topic and returns the summary
         response_text = YT_summary_generation(topic)
         
-        # Print the output for debugging purposes
-        print("This is the output:", response_text)
-                
         # Return the generated summary as JSON if no error is found
         return response_text
     
     except Exception as e:
         # Handle any exceptions that occur during the process
         print("Error occurred:", str(e))
-        return response_text
-
+        return jsonify({"error": str(e)}), 500
 
 
 def api_request(auth_token, site_url, endpoint_suffix, Tool_ID,Token):

@@ -34,4 +34,12 @@ Paragraph Format:
   "text_title": "The Impact of Climate Change on Global Agriculture",
   "summary": "The article discusses the impact of climate change on global agriculture, focusing on issues such as changing weather patterns, increased pests, and reduced crop yields. It also explores potential solutions like sustainable farming practices and technological innovations for adaptation."
 }
+
+### **Error Handling:** 
+- If the user provides **gibberish** or **invalid input**  for  text: {text}, return a **consistent error message** in the following pure JSON format:  
+
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid text for summary."
+}
 """
