@@ -109,11 +109,11 @@ Example Output:
 }
 
 ### **Error Handling:** 
-- If the user provides **gibberish** or **invalid input**  for  grade: {grade} or SEL TOPIC: {SEL_TOPIC}, or Learning Objective: {Learning_Objective}, or duration: {duration} return a **consistent error message** in the following format:  
+- If the user provides **gibberish** or **invalid input**  for SEL TOPIC: {SEL_TOPIC}, or Learning Objective: {Learning_Objective}, return a **consistent error message** in the following format:  
 
 Example Json Error:
 {
-  "error": "Invalid input provided. Please enter a valid grade, SEL topic, learning objective, and duration."
+  "error": "Invalid input provided. Please enter a valid SEL topic and learning objectives."
 }
 
 """

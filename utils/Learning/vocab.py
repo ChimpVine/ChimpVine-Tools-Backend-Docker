@@ -1,6 +1,7 @@
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -61,11 +62,16 @@ def vocabulary_generation(grade_level, subject, topic, num_words, difficulty_lev
     
     if output is None:
         return "Error: Unable to generate lesson plan."
+    
+    # Clean up the vocab output
+    output = output.replace("```", "").replace("json", "").replace("\n", "")
 
-    # Clean up the lesson plan output
-    output = output.replace("json", "")
-    output = output.replace("```", "")
-    print("Cleaned Output:", output)
+    # Parse the output into a JSON object if necessary
+    try:
+        output = json.loads(output)
+    except json.JSONDecodeError:
+        print("Failed to parse response as JSON. Returning raw output.")
+        output = {"error": "Failed to decode response", "response": output}
     
     return output
 

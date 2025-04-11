@@ -71,7 +71,7 @@ Generate example_sentence field only for the first word generated.
 
 Example Json Error:
 {
-  "error": "Invalid input provided. Please enter a valid grade level, subject, topic, number of words and difficulty level."
+  "error": "Invalid input provided. Please enter a valid subject, and topic"
 }
 
 """

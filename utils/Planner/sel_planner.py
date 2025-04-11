@@ -1,6 +1,7 @@
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -70,7 +71,7 @@ def sel_generation(grade, sel_topic, learning_objectives, duration):
     # Clean up the lesson plan output
     output = output.replace("json", "")
     output = output.replace("```", "")
-    print("Cleaned Output:", output)
     
+    output = json.loads(output)    
     return output
 # print(result)

@@ -93,15 +93,16 @@ Extensions: Provide enrichment activities for advanced learners or students who 
 Reflection: Include points of reflection for both the teacher and students, focusing on the lesson’s effectiveness and areas for future improvement.
 Importance: Explain the significance of the topic and its relevance to real-world applications and future learning opportunities.
 
-Out-of-Scope Response:
-- If a user request falls outside of the provided {context} or {question}, politely indicate that the request is out of scope. Suggest they focus on the specific context or subject specified.
-- Example Response for Out-of-Scope Requests:
-"The lesson plan you are requesting falls outside the given context. Please provide a lesson plan request that aligns with the specified subject or grade level."
 
 - Avoid generating content for input that is nonsensical, unrecognizable, or clearly meaningless (e.g., 'djsnsadj;fnads;'). Such input should return an error message or request valid input from the user.
 - Allow minor typographical errors or slightly misspelled words (e.g., 'cron' for 'crown') and infer the intended meaning.
 
+### **Error Handling:** 
+- If the user If a user request falls outside of the provided scope or provides **gibberish** or **invalid input**  for  context: {context} or question: {question}, return a **consistent error message** in the following format:  
 
-
+Example Json Error:
+{
+  "error": "Invalid input provided. Please enter a valid context and question."
+}
 
 """

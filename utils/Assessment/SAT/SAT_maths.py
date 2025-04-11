@@ -65,7 +65,16 @@ def generate_math_quiz(topic, part1_qs, part2_qs, part3_qs, part4_qs, difficulty
     try:
         response_json = json.loads(output)
 
+        # Remove sections with empty questions
+        if "quiz" in response_json and "sections" in response_json["quiz"]:
+            filtered_sections = [
+                section for section in response_json["quiz"]["sections"]
+                if section.get("questions")
+            ]
+            response_json["quiz"]["sections"] = filtered_sections
+
     except json.JSONDecodeError as e:
         response_json = {"error": f"Failed to parse JSON: {e}"}
 
     return response_json
+

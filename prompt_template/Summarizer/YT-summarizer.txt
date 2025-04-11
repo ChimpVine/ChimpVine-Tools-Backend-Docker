@@ -129,5 +129,7 @@ Your Task in Summary:
 
 Example Json Error:
 {
-  "Error": "Invalid input provided. Please enter a valid transcript."
+  "error": "Invalid input provided. Please enter a valid transcript."
 }
+
+"""
