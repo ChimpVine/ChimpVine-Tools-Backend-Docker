@@ -1888,58 +1888,30 @@ def generate_data():
 # New import for YT
 from utils.Summarizer.youtube import YT_summary_generation
 
-# # New YouTube code (try)
-# @app.route('/YT_summary', methods=['POST'])
-# def get_response():
-#     try:
-#         # Get the topic input from the user
-#         # topic = request.json.get('topic')
-#         topic = request.json.get('topic', '').strip()
-
-#         if not topic:
-#             return jsonify({"error": "Video Transcript cannot be empty"}), 400
-
- 
-#         prompt = YT_summary_generation(topic)
-            
-#         response_text = prompt
-#         print("This is the output:", response_text)
-        
-#         # Render the result template with the response
-#         return response_text
-    
-#     except Exception as e:
-#         # Render error message
-#         return response_text
+# New YouTube code (try)
 @app.route('/YT_summary', methods=['POST'])
 def get_response():
     try:
-        # Get the topic input from the user
+        # Get the transcript input from the user
         topic = request.json.get('topic', '').strip()
 
         if not topic:
             return jsonify({"error": "Video Transcript cannot be empty"}), 400
-        # Validate 'topic' field
-        valid, error = validate_string(topic, "Topic", min_length=3)
-        if not valid:
-            return jsonify({"error": error}), 400
-        print(topic)
-        # Assuming YT_summary_generation is a function that processes the topic and returns the summary
+
+        # Call the YT_summary_generation function
         response_text = YT_summary_generation(topic)
-        
-        # Print the output for debugging purposes
         print("This is the output:", response_text)
-                
-        # Return the generated summary as JSON if no error is found
+
+        # Check if response_text is a dictionary and contains an "error" key
+        if isinstance(response_text, dict) and "Error" in response_text:
+            # If an error is found, return the error message with 500 status code
+            return jsonify({"error": response_text["Error"]}), 400
+
         return response_text
     
     except Exception as e:
-        # Handle any exceptions that occur during the process
-        print("Error occurred:", str(e))
         return response_text
-
-
-
+        
 def api_request(auth_token, site_url, endpoint_suffix, Tool_ID,Token):
     """
     Helper function to perform API requests to the WordPress site.
