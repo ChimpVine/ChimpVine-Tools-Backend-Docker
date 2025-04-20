@@ -1,44 +1,42 @@
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
 # Load environment variables from .env file
 load_dotenv()
 
 # Get the OpenAI API key from environment variables
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 def generate_ps_math(subject, grade, number_of_questions, topic, pdf_text):
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
-        max_tokens=8000
-    )
-    # Debugging: check current directory
-    print("Current working directory:", os.getcwd())
+
+    llm = get_llm(tokens=8000)
     
-    def load_prompt_template(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                return file.read()
-        except UnicodeDecodeError:
-            print(f"Unicode decoding error for file: {file_path}. Trying different encoding.")
-            try:
-                with open(file_path, 'r', encoding='latin-1') as file:
-                    return file.read()
-            except Exception as e:
-                print(f"Error reading file {file_path}: {e}")
-                return None
-        except FileNotFoundError:
-            print(f"File not found: {file_path}")
-            return None
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-            return None
+    # Debugging: check current directory
+    # print("Current working directory:", os.getcwd())
+    
+    # def load_prompt_template(file_path):
+    #     try:
+    #         with open(file_path, 'r', encoding='utf-8') as file:
+    #             return file.read()
+    #     except UnicodeDecodeError:
+    #         print(f"Unicode decoding error for file: {file_path}. Trying different encoding.")
+    #         try:
+    #             with open(file_path, 'r', encoding='latin-1') as file:
+    #                 return file.read()
+    #         except Exception as e:
+    #             print(f"Error reading file {file_path}: {e}")
+    #             return None
+    #     except FileNotFoundError:
+    #         print(f"File not found: {file_path}")
+    #         return None
+    #     except Exception as e:
+    #         print(f"Unexpected error: {e}")
+    #         return None
 
     # Adjust the relative path to point directly to the file from the current directory
     prompt_file_path = os.path.join('prompt_template','Assessment', 'worksheet', 'ps_math.txt')
     prompt_template = load_prompt_template(prompt_file_path)
-    print("Prompt template loaded:", prompt_template)
 
     if prompt_template is None:
         return None  # Handle the error as needed

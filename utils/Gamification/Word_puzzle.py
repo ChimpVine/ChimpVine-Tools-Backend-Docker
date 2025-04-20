@@ -5,6 +5,11 @@ import random
 # Load environment variables from .env file
 load_dotenv()
 import json
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
+from validation.output_cleaning import clean_and_load_json
+
+
 # Get the OpenAI API key from environment variables
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
@@ -49,40 +54,36 @@ def create_word_puzzle(data):
     return puzzles
 
 def Word_puzzle(topic, numberofword, difficulty_level):
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
-        max_tokens=4095
-    )
+
+    llm = get_llm()
     
     # Debugging: check current directory
-    print("Current working directory:", os.getcwd())
+    # print("Current working directory:", os.getcwd())
     
-    def load_prompt_template(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                return file.read()
-        except UnicodeDecodeError:
-            print(f"Unicode decoding error for file: {file_path}. Trying different encoding.")
-            try:
-                with open(file_path, 'r', encoding='latin-1') as file:
-                    return file.read()
-            except Exception as e:
-                print(f"Error reading file {file_path}: {e}")
-                return None
-        except FileNotFoundError:
-            print(f"File not found: {file_path}")
-            return None
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-            return None
+    # def load_prompt_template(file_path):
+    #     try:
+    #         with open(file_path, 'r', encoding='utf-8') as file:
+    #             return file.read()
+    #     except UnicodeDecodeError:
+    #         print(f"Unicode decoding error for file: {file_path}. Trying different encoding.")
+    #         try:
+    #             with open(file_path, 'r', encoding='latin-1') as file:
+    #                 return file.read()
+    #         except Exception as e:
+    #             print(f"Error reading file {file_path}: {e}")
+    #             return None
+    #     except FileNotFoundError:
+    #         print(f"File not found: {file_path}")
+    #         return None
+    #     except Exception as e:
+    #         print(f"Unexpected error: {e}")
+    #         return None
 
     # Adjust the relative path to point directly to the file from the current directory
     prompt_file_path = os.path.join('prompt_template','Gamification', 'word_puzzal.txt')
     print(prompt_file_path)
     prompt_template = load_prompt_template(prompt_file_path)
-    print("Prompt template loaded:", prompt_template)
+
 
     if prompt_template is None:
         return "Error: Unable to load prompt template."
@@ -104,16 +105,11 @@ def Word_puzzle(topic, numberofword, difficulty_level):
         return "Error: Unable to generate lesson plan."
 
     # Clean up the lesson plan output
-    output = output.replace("json", "")
-    output = output.replace("```", "")
-    print("Cleaned Output:", output)
-    # Load the input JSON
-    data = json.loads(output)
-
+    output = clean_and_load_json(output)
     # Create word puzzle
-    puzzle_output = create_word_puzzle(data)
+    puzzle_output = create_word_puzzle(output)
 
     # Print the new JSON output
     output_json = json.dumps(puzzle_output, indent=4)
-    print(output_json)
+
     return output_json

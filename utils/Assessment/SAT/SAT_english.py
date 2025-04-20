@@ -2,17 +2,14 @@ import os
 import json
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from utils.model.llm_config import get_llm
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 def generate_english_quiz(selected_types):
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
-        max_tokens=4095
-    )
+
+    llm = get_llm()
 
     file_map = {
         "Passage Reading": 'passage_reading.txt',

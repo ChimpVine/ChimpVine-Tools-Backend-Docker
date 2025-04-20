@@ -2,6 +2,9 @@ import json
 import os
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
+from validation.output_cleaning import clean_and_load_json
 
 load_dotenv()
 
@@ -9,27 +12,23 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 def generate_math_quiz(topic, part1_qs, part2_qs, part3_qs, part4_qs, difficulty_level):
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",  
-        openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
-        max_tokens=4095
-    )
 
-    def load_prompt_template(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                return file.read()
-        except UnicodeDecodeError:
-            try:
-                with open(file_path, 'r', encoding='latin-1') as file:
-                    return file.read()
-            except Exception as e:
-                return None
-        except FileNotFoundError:
-            return None
-        except Exception as e:
-            return None
+    llm = get_llm()
+
+    # def load_prompt_template(file_path):
+    #     try:
+    #         with open(file_path, 'r', encoding='utf-8') as file:
+    #             return file.read()
+    #     except UnicodeDecodeError:
+    #         try:
+    #             with open(file_path, 'r', encoding='latin-1') as file:
+    #                 return file.read()
+    #         except Exception as e:
+    #             return None
+    #     except FileNotFoundError:
+    #         return None
+    #     except Exception as e:
+    #         return None
 
     # Load the prompt template
     prompt_file_path = os.path.join('prompt_template', 'Assessment', 'SAT', 'SAT_maths.txt')  # Update this path to your file
@@ -59,22 +58,18 @@ def generate_math_quiz(topic, part1_qs, part2_qs, part3_qs, part4_qs, difficulty
     if output is None:
         return "Error: Unable to generate math quiz."
 
-    # Clean up the output
-    output = output.replace("```", "").replace("json", "").strip()
+    # # Clean up the output
+    # output = output.replace("```", "").replace("json", "").strip()
+    
+    output=clean_and_load_json(output)
+    
+    # Remove sections with empty questions
+    if "quiz" in output and "sections" in output["quiz"]:
+        filtered_sections = [
+            section for section in output["quiz"]["sections"]
+            if section.get("questions")
+        ]
+        output["quiz"]["sections"] = filtered_sections
 
-    try:
-        response_json = json.loads(output)
-
-        # Remove sections with empty questions
-        if "quiz" in response_json and "sections" in response_json["quiz"]:
-            filtered_sections = [
-                section for section in response_json["quiz"]["sections"]
-                if section.get("questions")
-            ]
-            response_json["quiz"]["sections"] = filtered_sections
-
-    except json.JSONDecodeError as e:
-        response_json = {"error": f"Failed to parse JSON: {e}"}
-
-    return response_json
+    return output
 

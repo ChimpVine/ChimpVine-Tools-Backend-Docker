@@ -2,26 +2,24 @@ import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 import json
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
+
 # Load environment variables from .env file
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    openai_api_key=OPENAI_API_KEY,
-    temperature=0.5,
-    max_tokens=8000
-)
 
-def load_prompt_template(file_path):
-    with open(file_path, 'r') as file:
-        return file.read()
+llm = get_llm(tokens=8000)
+
+# def load_prompt_template(file_path):
+#     with open(file_path, 'r') as file:
+#         return file.read()
 
 # Load the prompt template
 prompt_template = load_prompt_template('./prompt_template/Planner/Lesson_planner.txt')
 
 def generate_lesson_plan(context, command):
     prompt = prompt_template.replace("{context}", context).replace("{question}", command)
-    print(prompt)
     response = llm.predict(prompt)
     
     if response is None:
@@ -37,5 +35,5 @@ def generate_lesson_plan(context, command):
     response = response.replace("<!DOCTYPE html>", "")
     response = response.replace("< lang=>", "")
     response = response.replace("json", "")
-    print("Cleaned response:", response)
+    
     return response

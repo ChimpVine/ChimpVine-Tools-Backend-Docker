@@ -1,6 +1,8 @@
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
 
 # Load environment variables from .env file
 load_dotenv()
@@ -10,21 +12,17 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 
 def generate_mcq_single(subject, grade, number_of_questions, topic, pdf_text):
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
-        max_tokens=8000
-    )
+    
+    llm = get_llm(tokens=8000)
     # Debugging: check current directory
     print("Current working directory:", os.getcwd())
-    def load_prompt_template(file_path):
-        try:
-            with open(file_path, 'r') as file:
-                return file.read()
-        except FileNotFoundError:
-            print(f"File not found: {file_path}")
-            return None
+    # def load_prompt_template(file_path):
+    #     try:
+    #         with open(file_path, 'r') as file:
+    #             return file.read()
+    #     except FileNotFoundError:
+    #         print(f"File not found: {file_path}")
+    #         return None
 
     # Adjust the relative path to point directly to the file from the current directory
     prompt_file_path = os.path.join('prompt_template','Assessment', 'worksheet', 'Single_correct.txt')
