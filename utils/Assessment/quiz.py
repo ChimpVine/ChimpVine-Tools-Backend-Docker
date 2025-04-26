@@ -5,6 +5,7 @@ import langchain_core
 
 from dotenv import load_dotenv
 import os
+from utils.model.llm_config import get_llm
 
 # Load environment variables from .env file
 load_dotenv()
@@ -12,12 +13,8 @@ load_dotenv()
 # Access the environment variables
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 def quiz_generator(topic, language, subject, number, difficulty):  
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
-        max_tokens=4095
-    )
+  
+    llm = get_llm()
 
     prompt_template = """Role: Act as a particular subject teacher and complete the given task below as shown in example.
 
@@ -115,7 +112,6 @@ def quiz_generator(topic, language, subject, number, difficulty):
     
     query = f" Generate quiz on the topic '{topic}'. The language should be '{language}' and difficulty should be '{difficulty}'. The subject is '{subject}'. Generate '{new_number}' number of questions in each quiz."
     quizz = chain.invoke({'context':query}) 
-    print(quizz)
     
     main_quiz=(quizz['text']).replace('(','{')
     main_quiz=main_quiz.replace(')','}')

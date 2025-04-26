@@ -3,33 +3,18 @@ import json
 # from langchain_openai import ChatOpenAI
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
 
 # Load environment variables
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # Initialize LLM once
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    openai_api_key=OPENAI_API_KEY,
-    temperature=0.5,
-    max_tokens=4095
-)
+llm = get_llm()
 
 # Function to generate passage options based on initial inputs
 def generate_passage(topic, difficulty, no_of_words):
-
-    # Load the prompt template
-    def load_prompt_template(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                return file.read()
-        except FileNotFoundError:
-            print(f"File not found: {file_path}")
-            return None
-        except Exception as e:
-            print(f"Error reading file {file_path}: {e}")
-            return None
 
     # Construct the file path for the prompt template
     prompt_template_path = os.path.join('prompt_template', 'Assessment', 'Comprehension', 'reading','passage.txt')
@@ -61,7 +46,3 @@ def generate_passage(topic, difficulty, no_of_words):
         print(f"Error generating questions: {e}")
         return json.dumps({"error": str(e)}, indent=4)
 
-# Example Usage
-if __name__ == "__main__":
-    result = generate_passage(topic="The Water Cycle", difficulty="easy", no_of_words=250)
-    print("Final Output:\n", result)

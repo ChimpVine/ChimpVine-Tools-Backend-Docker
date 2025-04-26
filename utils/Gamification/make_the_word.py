@@ -3,6 +3,8 @@ import json
 import os
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
 
 # Load environment variables from .env file
 load_dotenv()
@@ -10,14 +12,14 @@ load_dotenv()
 # Get the OpenAI API key from environment variables
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-def load_prompt_template(file_path):
-    """Load prompt template from a file."""
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return file.read()
-    except (UnicodeDecodeError, FileNotFoundError) as e:
-        print(f"Error loading file {file_path}: {e}")
-        return None
+# def load_prompt_template(file_path):
+#     """Load prompt template from a file."""
+#     try:
+#         with open(file_path, 'r', encoding='utf-8') as file:
+#             return file.read()
+#     except (UnicodeDecodeError, FileNotFoundError) as e:
+#         print(f"Error loading file {file_path}: {e}")
+#         return None
 
 def shuffle_letters(letters):
     """Shuffle the given letters."""
@@ -27,12 +29,9 @@ def shuffle_letters(letters):
 
 def generate_make_the_word(theme, difficulty_level, number_of_words):
     """Generate a word-building game based on theme, difficulty level, and number of words."""
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        openai_api_key=OPENAI_API_KEY,
-        temperature=1,
-        max_tokens=4095
-    )
+    
+    llm = get_llm(temp=1)
+    
     
     prompt_file_path = os.path.join('prompt_template', 'Gamification', 'make_the_word.txt')
     prompt_template = load_prompt_template(prompt_file_path)

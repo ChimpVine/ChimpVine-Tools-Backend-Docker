@@ -2,6 +2,8 @@ import os
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import json
+from utils.Folder_config.file_handler import load_prompt_template
+from utils.model.llm_config import get_llm
 
 # Load environment variables
 load_dotenv()
@@ -9,28 +11,8 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # Function to generate data options based on difficulty
 def generate_data_options(difficulty,type):
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        openai_api_key=OPENAI_API_KEY,
-        temperature=0.5,
-        max_tokens=4095
-    )
-    
-    # Debugging: check current directory
-    print("Current working directory:", os.getcwd())
 
-# Function to load the prompt template based on the difficulty
-    def load_prompt_template(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                return file.read()
-        except FileNotFoundError:
-            print(f"File not found: {file_path}")
-            return None
-        except Exception as e:
-            print(f"Error reading file {file_path}: {e}")
-            return None
-
+    llm = get_llm()
     # Construct the file path for the correct prompt
     prompt_template_path = os.path.join('prompt_template', 'Assessment', 'Comprehension','writing','data_table.txt')
 
@@ -59,7 +41,3 @@ def generate_data_options(difficulty,type):
     except Exception as e:
         print(f"Error generating questions: {e}")
         return {"error": str(e)}
-
-# Example usage:
-# result = generate_writing_options("House and Home", "medium", "letter")
-# print(result)

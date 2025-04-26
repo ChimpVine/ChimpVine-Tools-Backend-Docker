@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
+from utils.model.llm_config import get_llm
 
 # Load environment variables
 load_dotenv()
@@ -16,12 +17,7 @@ app = Flask(__name__)
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # Set up OpenAI LLM using Langchain
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    openai_api_key=OPENAI_API_KEY,
-    temperature=0.5,
-    max_tokens=4095
-)
+llm = get_llm()
 
 # Function to generate an empty word search grid
 def generate_empty_grid(size):
